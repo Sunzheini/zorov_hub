@@ -1,24 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>the base.html</title>
-</head>
-<br>
-<br>
-<body>
+{% extends 'core/base.html' %}
+
+{% block page_title %}Process description{% endblock %}
+
+{% block page_content %}
+This is the `process description` page
+
+    <br><br><br>
+    {% csrf_token %}
+    {{ csrf_token }}
+    <br><br>
+    {# some comment #}
+    {% comment %}
+    multiline comment
+    {% endcomment %}
     The process is: {{ process_id }}
-    <br>
-    <br>
-    <br>
-    My info is: {{ my_info }}
-    <br>
-    <br>
-    <br>
+    <br><br>
+
+    {% if my_info %}
+        My info /w `for` tag {{ my_info }}:
+        {% for i in my_info %}
+            <li>{{ i }}</li>
+        {% endfor %}
+    {% else %}
+        Nothing!
+    {% endif %}
+
+    <br><br>
     Random: {{ value }}
-    <br>
-    <br>
-    <br>
+    <br><br>
     A dict: {{ a_dict.first_item }}, {{ a_dict.second_item }}
-</body>
-</html>
+    <br><br>
+    From class /w filter: {{ from_class|upper }}
+    <br><br>
+    Filter only: {{ 2|add:3|add:4 }}
+    <br><br>
+    Datetime /w filter: {{ datetime|date:"d-m-Y" }}
+    <br><br>
+{% endblock %}
