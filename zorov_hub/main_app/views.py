@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 
 
 # ----------------------------------------------------------------------
+# test with a class
 class ListDisplay:
     @staticmethod
     def display_list():
@@ -23,6 +24,10 @@ def games(request):
 
 def shopping_list(request):
     return render(request, 'shopping_list.html')
+
+
+def tasks(request):
+    return render(request, 'tasks.html')
 
 
 # mikro-kontrolerite vkyshti naglasi
@@ -53,8 +58,6 @@ def process_description(request, process_id):
 
 
 # ----------------------------------------------------------------------
+# not used
 def return_to_home(request):
     return redirect('index')
-
-
-
