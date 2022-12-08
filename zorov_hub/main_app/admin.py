@@ -1,3 +1,14 @@
 from django.contrib import admin
+from zorov_hub.main_app.models import Groceries, Tasks
 
-# Register your models here.
+
+@admin.register(Groceries)
+class GroceriesAdmin(admin.ModelAdmin):
+    list_display = ('id', 'grocery_name', 'grocery_count')  # display v admin
+
+
+@admin.register(Tasks)
+class TasksAdmin(admin.ModelAdmin):
+    list_display = ('id', 'task_name')
+    list_filter = ('task_email', 'task_accepted')
+    search_fields = ('id', 'task_name')
