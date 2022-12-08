@@ -1,16 +1,15 @@
 from django.db import models
 
+
 # 1 class == 1 table
-"""
-Groceries.objects.all()             # get all objects // Select
-Groceries.objects.create()          # create a new object // Insert
-Groceries.objects.filter()          # filter // Select + Where
-Groceries.objects.update()          # update // Update
-Groceries.objects.raw('SELECT * ')  # directly sql
-"""
-
-
 class Groceries(models.Model):
+
+    # meta danni za modela
+    class Meta:
+        ordering = ['-id']   # po kakvo se sortira by default // -id e descending
+        verbose_name_plural = 'Groceries'
+        # abstract = True   # pozvolqva da se nasledqva napr. kato Mixin
+
     grocery_name = models.CharField(
         max_length=30,
     )
@@ -24,12 +23,18 @@ class Groceries(models.Model):
 
     # automatically displays like this at admin site
     def __str__(self):
-        return f"ID: {self.pk}, " \
+        return f"__str__: ID: {self.pk}, " \
                f"grocery_name: {self.grocery_name}, " \
                f"grocery_count: {self.grocery_count}"
 
 
 class Tasks(models.Model):
+
+    # meta danni za modela
+    class Meta:
+        ordering = ['id']
+        verbose_name_plural = 'Tasks'
+
     task_name = models.CharField(  # v admin: `task_name` stava `Task name` avtomatichno
         max_length=30,
         unique=True,
@@ -69,5 +74,5 @@ class Tasks(models.Model):
 
     # automatically displays like this at admin site
     def __str__(self):
-        return f"ID: {self.pk}, task_name: {self.task_name}, " \
+        return f"__str__: ID: {self.pk}, task_name: {self.task_name}, " \
                f"task_responsible: {self.task_responsible}, etc."

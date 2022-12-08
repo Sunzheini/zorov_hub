@@ -36,4 +36,20 @@ This is the `process description` page
     <br><br>
     Datetime /w filter: {{ datetime|date:"d-m-Y" }}
     <br><br>
+
+    Groceries:<br>
+    {% for g in groceries_list %}
+        <li>{{ g.full_grocery_info }}</li>
+    {% endfor %}
+    <br><br>
+
+    Tasks:<br>
+    {% for t in tasks_list %}
+        <li>{{ t.task_name }}: {{ t }}</li>
+    {% endfor %}
+    <br><br>
+
+    Task1: {{ task_1 }}
+    <br><br>
+
 {% endblock %}
