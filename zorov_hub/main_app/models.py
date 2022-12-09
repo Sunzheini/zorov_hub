@@ -76,3 +76,27 @@ class Tasks(models.Model):
     def __str__(self):
         return f"__str__: ID: {self.pk}, task_name: {self.task_name}, " \
                f"task_responsible: {self.task_responsible}, etc."
+
+
+class Games(models.Model):
+
+    class Meta:
+        ordering = ['id']
+        verbose_name_plural = 'Games'
+
+    game_name = models.CharField(
+        max_length=30,
+    )
+
+    game_description = models.TextField(
+        blank=True, null=True,
+    )
+
+    slug = models.SlugField(
+        unique=True,
+        null=True,
+        blank=True,
+    )
+
+    def __str__(self):
+        return f"{self.game_name} - a game"

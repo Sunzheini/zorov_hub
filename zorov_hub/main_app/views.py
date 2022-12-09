@@ -2,7 +2,8 @@ import random
 from datetime import datetime
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from zorov_hub.main_app.models import Groceries, Tasks
+from django.utils.text import slugify
+from zorov_hub.main_app.models import Groceries, Tasks, Games
 
 # ----------------------------------------------------------------------
 # test with a class
@@ -54,6 +55,8 @@ def process_description(request, process_id):
     get_the_tasks_info = get_all_tasks()
     get_1_task = get_a_specific_task()
 
+    make_them_slugs()
+
     context = {
         'process_id': process_id,
         'my_info': [4, 5, 6],
@@ -65,8 +68,17 @@ def process_description(request, process_id):
         'groceries_list': get_the_groceries_info,
         'tasks_list': get_the_tasks_info,
         'task_1': get_1_task,
+
+        'games': Games.objects.all(),
     }
     return render(request, 'process_description.html', context)
+
+
+def game_details(request, pk, slug):
+    context = {
+        'current_game': get_object_or_404(Games, pk=pk, slug=slug)
+    }
+    return render(request, 'game_details.html', context)
 
 
 # ----------------------------------------------------------------------
@@ -106,6 +118,16 @@ def get_a_specific_task():
     # get returns an object, not a query set
     specific_task = Tasks.objects.get(pk=1)
     return specific_task
+
+
+# ----------------------------------------------------------------------
+def make_them_slugs():
+    all_games = Games.objects.all()
+    for g in all_games:
+        g.slug = slugify(g.game_name)
+    Games.objects.bulk_update(all_games, ['slug'])
+
+# ----------------------------------------------------------------------
 
 
 # not used

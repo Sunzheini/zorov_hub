@@ -52,4 +52,10 @@ This is the `process description` page
     Task1: {{ task_1 }}
     <br><br>
 
+    Games:<br>
+    {% for g in games %}
+        <li>{{ g.slug }}</li>
+    {% endfor %}
+    <br><br>
+
 {% endblock %}

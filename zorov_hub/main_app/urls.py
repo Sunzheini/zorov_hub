@@ -1,6 +1,7 @@
 from django.urls import path
 from zorov_hub.main_app.views import index, games, shopping_list, \
-    process_description, control_of_garden, control_of_home, chat, tasks
+    process_description, control_of_garden, control_of_home, chat, \
+    tasks, game_details
 
 urlpatterns = (
     # http://127.0.0.1:8000/
@@ -8,6 +9,10 @@ urlpatterns = (
 
     # http://127.0.0.1:8000/games/
     path('games/', games, name='games'),
+
+    # http://127.0.0.1:8000/games/1/tetris/
+    # http://127.0.0.1:8000/games/2/wow/
+    path('games/<int:pk>/<slug:slug>/', game_details, name='game details'),
 
     # http://127.0.0.1:8000/shopping-list/
     path('shopping-list/', shopping_list, name='shopping list'),
