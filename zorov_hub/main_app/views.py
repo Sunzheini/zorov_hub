@@ -3,6 +3,8 @@ from datetime import datetime
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.text import slugify
+
+from zorov_hub.main_app.forms import NameForm
 from zorov_hub.main_app.models import Groceries, Tasks, Games
 
 # ----------------------------------------------------------------------
@@ -27,7 +29,21 @@ def games(request):
 
 
 def shopping_list(request):
-    return render(request, 'shopping_list.html')
+    a_grocery_name = None
+    a_grocery_count = None
+    if request.method == 'GET':
+        form = NameForm()       # ako e get syzdava formata prazna
+    else:   # request.method == 'post'
+        form = NameForm(request.POST)
+        form.is_valid()
+        a_grocery_name = form.cleaned_data['grocery_name']
+        a_grocery_count = form.cleaned_data['grocery_count']
+    context = {
+        'name_form': form,
+        'a_grocery_name': a_grocery_name,
+        'a_grocery_count': a_grocery_count,
+    }
+    return render(request, 'shopping_list.html', context)
 
 
 def tasks(request):

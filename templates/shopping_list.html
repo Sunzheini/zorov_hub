@@ -4,4 +4,21 @@
 
 {% block page_content %}
 This is the `shopping list` page
+
+<br><br>
+
+<h3>
+    {% if a_grocery_name %}
+        Last you entered --{{ a_grocery_name }}--
+    {% else %}
+        Enter a grocery name
+    {% endif %}
+</h3>
+{{ csrf_token }}
+<form action="{% url 'shopping list' %}" method="post">
+    {{ name_form }}
+    {% csrf_token %}
+    <button>send to database</button>
+</form>
+
 {% endblock %}
