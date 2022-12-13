@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.text import slugify
 
-from zorov_hub.main_app.forms import NameForm
+from zorov_hub.main_app.forms import NameForm, GameForm
 from zorov_hub.main_app.models import Groceries, Tasks, Games
 
 # ----------------------------------------------------------------------
@@ -25,19 +25,50 @@ def index(request):
 
 
 def games(request):
-    return render(request, 'games.html')
+
+    if request.method == 'GET':
+        form = GameForm()  # ako e get syzdava formata prazna
+    else:  # request.method == 'post'
+        form = GameForm(request.POST)
+        form.is_valid()  # proverka sprqmo zadadenoto v formata
+
+    # write to db - second option
+    # ---------------------------------------------------------------------
+        Games.objects.create(
+            **form.cleaned_data
+        )
+        make_them_slugs()
+
+    # ---------------------------------------------------------------------
+    context = {
+        'game_form': form,
+    }
+
+    return render(request, 'games.html', context)
 
 
 def shopping_list(request):
+
+    # form
+    # ---------------------------------------------------------------------
     a_grocery_name = None
     a_grocery_count = None
     if request.method == 'GET':
         form = NameForm()       # ako e get syzdava formata prazna
     else:   # request.method == 'post'
         form = NameForm(request.POST)
-        form.is_valid()
-        a_grocery_name = form.cleaned_data['grocery_name']
-        a_grocery_count = form.cleaned_data['grocery_count']
+        form.is_valid()         # proverka sprqmo zadadenoto v formata
+        a_grocery_name = form.cleaned_data['form_grocery_name']
+        a_grocery_count = form.cleaned_data['form_grocery_count']
+
+    # write to db
+    # ---------------------------------------------------------------------
+        Groceries.objects.create(
+            grocery_name=a_grocery_name,
+            grocery_count=a_grocery_count
+        )
+
+    # ---------------------------------------------------------------------
     context = {
         'name_form': form,
         'a_grocery_name': a_grocery_name,

@@ -9,14 +9,14 @@ This is the `shopping list` page
 
 <h3>
     {% if a_grocery_name %}
-        Last you entered --{{ a_grocery_name }}--
+        Last you entered --{{ a_grocery_name }} of {{ a_grocery_count }}--
     {% else %}
         Enter a grocery name
     {% endif %}
 </h3>
 {{ csrf_token }}
 <form action="{% url 'shopping list' %}" method="post">
-    {{ name_form }}
+    {{ name_form.as_div }}
     {% csrf_token %}
     <button>send to database</button>
 </form>
