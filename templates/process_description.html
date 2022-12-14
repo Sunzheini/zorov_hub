@@ -54,7 +54,10 @@ This is the `process description` page
 
     Games:<br>
     {% for g in games %}
-        <li>{{ g.slug }}</li>
+        <li>{{ g.slug }},
+            <br> {{ g.game_image }}
+            <br> <img width="200" src="/media/{{ g.game_image }}"/>
+        </li>
     {% endfor %}
     <br><br>
 

@@ -2,6 +2,9 @@ from django.db import models
 
 
 # 1 class == 1 table
+from zorov_hub.main_app.validators import validate_text
+
+
 class Groceries(models.Model):
 
     # meta danni za modela
@@ -86,6 +89,10 @@ class Games(models.Model):
 
     game_name = models.CharField(
         max_length=30,
+
+        validators=(
+            validate_text,  # validator na modelform se pravi v modela - raboti!
+        ),
     )
 
     game_description = models.TextField(
@@ -93,10 +100,17 @@ class Games(models.Model):
     )
 
     slug = models.SlugField(
-        unique=True,
+        # unique=True,
         null=True,
         blank=True,
     )
+
+    game_image = models.ImageField(
+        blank=True, null=True,
+        upload_to='images'  # syzdava folder images v MEDIA_ROOT
+    )
+
+    # analogichno e s filefield
 
     def __str__(self):
         return f"{self.game_name} - a game"

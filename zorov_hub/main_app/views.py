@@ -29,8 +29,13 @@ def games(request):
     if request.method == 'GET':
         form = GameForm()  # ako e get syzdava formata prazna
     else:  # request.method == 'post'
-        form = GameForm(request.POST)
+        form = GameForm(request.POST, request.FILES)
         form.is_valid()  # proverka sprqmo zadadenoto v formata
+
+    # ne sym go probval vmesto ostanaloto za zapazvane
+    # -----------------
+    #     if form.is_valid():
+    #         form.save()
 
     # write to db - second option
     # ---------------------------------------------------------------------

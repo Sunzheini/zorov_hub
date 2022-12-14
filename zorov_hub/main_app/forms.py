@@ -1,6 +1,7 @@
 from django import forms
+from django.core.validators import MaxValueValidator
 from zorov_hub.main_app.models import Games
-from zorov_hub.main_app.validators import some_validator
+from zorov_hub.main_app.validators import some_validator, validate_text
 
 
 # independent form (not modelform)
@@ -18,11 +19,19 @@ class NameForm(forms.Form):
         help_text='help text',
 
         widget=forms.Textarea,  # default is TextInput and we overwrite with TextArea
+
+        validators=(
+            validate_text,          # a validator - ne raboti s `form.cleaned_data`
+        ),
     )
     form_grocery_count = forms.IntegerField(
         # required=False,
-        label='madafaka count',
+        label='countz',
         initial=1,
+
+        validators=(
+            MaxValueValidator(10),  # built-in validator - ne raboti s `form.cleaned_data`
+        ),
     )
 
     # types of select widgets - not connected to anything currently
@@ -54,6 +63,7 @@ class NameForm(forms.Form):
 
 
 # model form - for db driven apps
+# pravqt validaciq prez modela
 class GameForm(forms.ModelForm):
     class Meta:
         model = Games
@@ -70,4 +80,3 @@ class GameForm(forms.ModelForm):
         labels = {         # drugite defaultni gi promqneme taka
             'game_name': 'game namez',
         }
-

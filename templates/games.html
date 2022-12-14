@@ -5,7 +5,7 @@
 {% block page_content %}
 This is the `games` page
 
-    <form action="{% url 'games' %}" method="post">
+    <form action="{% url 'games' %}" method="post" enctype="multipart/form-data">
         {{ game_form.as_div }}
         {% csrf_token %}
         <button>write 2 da db</button>

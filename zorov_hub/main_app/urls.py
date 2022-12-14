@@ -1,9 +1,12 @@
+from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import path
+
 from zorov_hub.main_app.views import index, games, shopping_list, \
     process_description, control_of_garden, control_of_home, chat, \
     tasks, game_details
 
-urlpatterns = (
+urlpatterns = [
     # http://127.0.0.1:8000/
     path('', index, name='index'),
 
@@ -31,7 +34,10 @@ urlpatterns = (
 
     # http://127.0.0.1:8000/3/process_description/
     path('<int:process_id>/process_description/', process_description, name='process-map'),
-)
+]
 
 # http://127.0.0.1:8000/3/process_description/11asd
 # 404
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
