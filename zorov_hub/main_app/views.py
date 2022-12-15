@@ -187,3 +187,48 @@ def delete_grocery(request, pk):
     to_delete = get_object_or_404(Groceries, pk=pk)
     to_delete.delete()
     return redirect('index')
+
+
+# # --------------------------------------------------------------------------
+# # profile / no profile different homepage
+#
+#
+# def get_profile():
+#     try:
+#         return Profile.objects.get()
+#     except Profile.DoesNotExist as ex:
+#         return None
+#
+#
+# def add_profile(request):
+#     if get_profile() is not None:
+#         return redirect('index')
+#
+#     if request.method == 'GET':
+#         form = ProfileForm()
+#     else:
+#         form = ProfileForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('index')
+#
+#     context = {
+#         'form': form,
+#     }
+#     return render(request, 'core/home-no-profile.html', context)
+#
+#
+# def index(request):
+#     profile = get_profile()
+#     if profile is None:
+#         return redirect('add profile')
+#
+#     context = {
+#         'albums': Album.objects.all(),
+#     }
+#
+#     return render(request, 'core/home-with-profile.html', context)
+#
+#
+# # --------------------------------------------------------------------------
+
