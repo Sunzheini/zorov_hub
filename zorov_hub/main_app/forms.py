@@ -87,3 +87,11 @@ class GameForm(forms.ModelForm):
 #         if commit:
 #             self.instance.delete()
 #         return self.instance
+
+
+# overwrite save to delete image(or file?)
+#     def save(self, commit=True):
+#         image_path = self.instance.image.path
+#         self.instance.delete()
+#         os.remove(image_path)
+#         return self.instance
