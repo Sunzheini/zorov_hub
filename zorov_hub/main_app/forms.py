@@ -70,7 +70,7 @@ class GameForm(forms.ModelForm):
         fields = '__all__'  # or ('name', 'age')
 
         widgets = {     # kogato e model form widgetite sa taka
-            'game_name': forms.TextInput(
+            'game_name': forms.TextInput(   # trqbva da orgovarqt napr Numberinput, Textarea, Urlinput
                 attrs={
                     'placeholder': 'elden ring',
                 }
@@ -80,3 +80,10 @@ class GameForm(forms.ModelForm):
         labels = {         # drugite defaultni gi promqneme taka
             'game_name': 'game namez',
         }
+
+
+# overwrite save to delete
+#     def save(self, commit=True):
+#         if commit:
+#             self.instance.delete()
+#         return self.instance

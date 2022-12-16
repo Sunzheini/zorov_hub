@@ -103,6 +103,7 @@ class Games(models.Model):
         # unique=True,
         null=True,
         blank=True,
+        verbose_name='SLUG',
     )
 
     game_image = models.ImageField(

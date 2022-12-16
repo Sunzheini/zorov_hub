@@ -169,8 +169,56 @@ def get_all_tasks():
 def get_a_specific_task():
     # get returns an object, not a query set
     specific_task = Tasks.objects.get(pk=1)
+
+    # tova syshto ravoteshe na exam prep
+    # album = Album.objects.filter(pk=pk) \
+    #     .get()
+
     return specific_task
 
+
+# ----------------------------------------------------------------------
+# kogato iskame da ni izleze konkretna forma s popylneni veche danni
+# da gi edit-nem, izpolzvame instance
+
+# def edit_album(request, pk):
+#
+#     album = Album.objects.get(pk=pk)
+#
+#     if request.method == 'GET':
+#         form = AlbumEditForm(instance=album)
+#     else:
+#         form = AlbumEditForm(request.POST, instance=album)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('index')
+#
+#     context = {
+#         'form': form,
+#         'album': album,   # za da vzemem pk v url vyv form v html-a
+#     }
+#     return render(request, 'albums/edit-album.html', context)
+
+# ----------------------------------------------------------------------
+# za delete
+
+# def delete_album(request, pk):
+#
+#     album = Album.objects.get(pk=pk)
+#
+#     if request.method == 'GET':
+#         form = AlbumDeleteForm(instance=album)
+#     else:
+#         form = AlbumDeleteForm(request.POST, instance=album)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('index')
+#
+#     context = {
+#         'form': form,
+#         'album': album,
+#     }
+#     return render(request, 'albums/delete-album.html', context)
 
 # ----------------------------------------------------------------------
 def make_them_slugs():
