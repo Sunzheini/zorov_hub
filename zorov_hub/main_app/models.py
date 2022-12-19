@@ -2,7 +2,7 @@ from django.db import models
 
 
 # 1 class == 1 table
-from zorov_hub.main_app.validators import validate_text
+from zorov_hub.main_app.validators import validate_text, validate_profile_name
 
 
 class Groceries(models.Model):
@@ -115,3 +115,28 @@ class Games(models.Model):
 
     def __str__(self):
         return f"{self.game_name} - a game"
+
+
+class Profile(models.Model):
+    class Meta:
+        ordering = ['id']
+        verbose_name_plural = 'Profiles'
+
+    profile_name = models.CharField(
+        max_length=30,
+        blank=False, null=False,
+
+        validators=(
+            validate_profile_name,  # validator na modelform se pravi v modela - raboti!
+        ),
+    )
+
+    profile_type = models.CharField(
+        max_length=30,
+        blank=False, null=False,
+        choices=(
+            ('noob', 'noob'),  # v bazata, v admin
+            ('pro', 'pro'),
+            ('gigachad', 'gigachad'),
+        )
+    )

@@ -4,4 +4,13 @@
 
 {% block page_content %}
 This is the `control of home` page
+    <br><br>
+    {{ some_text }}
+
+    <br><br>
+    <ul>
+    {% for game in games %}
+        <li>{{ game }}</li>
+    {% endfor %}
+    </ul>
 {% endblock %}

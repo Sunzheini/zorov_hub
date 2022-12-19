@@ -1,14 +1,24 @@
 from django.conf import settings
 from django.conf.urls.static import static
-from django.urls import path
+from django.urls import path, include
 
 from zorov_hub.main_app.views import index, games, shopping_list, \
-    process_description, control_of_garden, control_of_home, chat, \
-    tasks, game_details
+    process_description, chat, \
+    tasks, game_details, ControlView, ControlView2, add_profile, \
+    edit_profile, delete_profile
 
 urlpatterns = [
     # http://127.0.0.1:8000/
     path('', index, name='index'),
+
+    path('profile/', include([
+        # http://127.0.0.1:8000/profile/add
+        path('add/', add_profile, name='add profile'),
+        # http://127.0.0.1:8000/profile/edit
+        path('edit/', edit_profile, name='edit profile'),
+        # http://127.0.0.1:8000/profile/delete
+        path('delete/', delete_profile, name='delete profile'),
+    ])),
 
     # http://127.0.0.1:8000/games/
     path('games/', games, name='games'),
@@ -24,10 +34,10 @@ urlpatterns = [
     path('tasks/', tasks, name='tasks'),
 
     # http://127.0.0.1:8000/control-of-garden/
-    path('control-of-garden/', control_of_garden, name='control of garden'),
+    path('control-of-garden/', ControlView.get_view1(), name='control of garden'),
 
     # http://127.0.0.1:8000/control-of-home/
-    path('control-of-home/', control_of_home, name='control of home'),
+    path('control-of-home/', ControlView2.as_view(), name='control of home'),
 
     # http://127.0.0.1:8000/chat/
     path('chat/', chat, name='chat'),
@@ -38,18 +48,6 @@ urlpatterns = [
 
 # http://127.0.0.1:8000/3/process_description/11asd
 # 404
-
-# example with include
-# path('album/', include([
-#     # http://localhost:8000/album/add/
-#     path('add/', add_album, name='add album'),
-#     # http://localhost:8000/album/details/<id>/
-#     path('details/<int:pk>', album_details, name='album details'),
-#     # http://localhost:8000/album/edit/<id>/
-#     path('edit/<int:pk>', edit_album, name='edit album'),
-#     # http://localhost:8000/album/delete/<id>/
-#     path('delete/<int:pk>', delete_album, name='delete album'),
-# ])),
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

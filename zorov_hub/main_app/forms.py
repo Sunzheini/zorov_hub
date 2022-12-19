@@ -1,6 +1,6 @@
 from django import forms
 from django.core.validators import MaxValueValidator
-from zorov_hub.main_app.models import Games
+from zorov_hub.main_app.models import Games, Profile
 from zorov_hub.main_app.validators import some_validator, validate_text
 
 
@@ -82,11 +82,35 @@ class GameForm(forms.ModelForm):
         }
 
 
-# overwrite save to delete
-#     def save(self, commit=True):
-#         if commit:
-#             self.instance.delete()
-#         return self.instance
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = '__all__'
+
+        widgets = {
+            'profile_name': forms.TextInput(
+                attrs={
+                    'placeholder': 'desired profile name',
+                }
+            )
+        }
+
+
+class ProfileEditForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = '__all__'
+
+
+class ProfileDeleteForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = '__all__'
+
+    def save(self, commit=True):
+        if commit:
+            self.instance.delete()
+        return self.instance
 
 
 # overwrite save to delete image(or file?)

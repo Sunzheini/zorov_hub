@@ -9,3 +9,9 @@ def some_validator(value):
 def validate_text(value):
     if '_' in value:
         raise ValidationError('there is a `_` in the word')
+
+
+def validate_profile_name(value):
+    for ch in value:
+        if ch == ' ':
+            raise ValidationError('there is a black space in the profile name')

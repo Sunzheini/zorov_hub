@@ -1,15 +1,17 @@
 import random
 from datetime import datetime
+
+from django.views import generic as views
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.text import slugify
 
-from zorov_hub.main_app.forms import NameForm, GameForm
-from zorov_hub.main_app.models import Groceries, Tasks, Games
+from zorov_hub.main_app.forms import NameForm, GameForm, ProfileForm
+from zorov_hub.main_app.models import Groceries, Tasks, Games, Profile
+
 
 # ----------------------------------------------------------------------
 # test with a class
-
 
 class ListDisplay:
     @staticmethod
@@ -17,12 +19,133 @@ class ListDisplay:
         return ['item1', 'item22', 'item3']
 
 
-# page views
+# class-based views
 # ----------------------------------------------------------------------
 
+class ControlView:
+    @classmethod
+    def get_view1(cls):
+        return ControlView().control_of_garden
+
+    # mikro-kontrolerite vkyshti naglasi
+    def control_of_garden(self, request):
+        return render(request, 'control_of_garden.html')
+
+
+# class ControlView2(views.View):
+#     def get(self, request):     # prenapisvame gotoviq metod get
+#         return self.control_of_home(request)
+#
+#     # avotmatizaciq bylgarene  / solarni paneli
+#     def control_of_home(self, request):
+#
+#         context = {
+#             'some_text': 'some text...'
+#         }
+#
+#         return render(request, 'control_of_home.html', context)
+
+
+class ControlView2(views.TemplateView):
+    template_name = 'control_of_home.html'
+    extra_context = {'some_text': 'some text...'}
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['games'] = Games.objects.all()
+        return context
+
+
+# Index function based view
+# ----------------------------------------------------------------------
+# ----------------------------------------------------------------------
+# profile / no profile different homepage
+
+def get_profile():
+    try:
+        return Profile.objects.get(pk=1)        # ToDo: Authentication
+    except Profile.DoesNotExist as ex:
+        return None
+
+
+def add_profile(request):
+    if get_profile() is not None:
+        return redirect('index')
+
+    if request.method == 'GET':
+        form = ProfileForm()
+    else:
+        form = ProfileForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('index')
+
+    context = {
+        'form': form,
+    }
+    return render(request, 'add_profile.html', context)
+
+
 def index(request):
+    profile = get_profile()
+    if profile is None:
+        return redirect('add profile')
+
     return render(request, 'index.html')
 
+
+# ----------------------------------------------------------------------
+# kogato iskame da ni izleze konkretna forma s popylneni veche danni
+# da gi edit-nem, izpolzvame instance
+
+
+# ToDo: add profile details page and then links to the below views
+# ToDo: hide form in delete like in the exam prep2
+
+def edit_profile(request, pk):
+
+    album = Album.objects.get(pk=pk)
+
+    if request.method == 'GET':
+        form = AlbumEditForm(instance=album)
+    else:
+        form = AlbumEditForm(request.POST, instance=album)
+        if form.is_valid():
+            form.save()
+            return redirect('index')
+
+    context = {
+        'form': form,
+        'album': album,   # za da vzemem pk v url vyv form v html-a
+    }
+    return render(request, 'albums/edit-album.html', context)
+
+# ----------------------------------------------------------------------
+# za delete
+
+
+def delete_profile(request, pk):
+
+    album = Album.objects.get(pk=pk)
+
+    if request.method == 'GET':
+        form = AlbumDeleteForm(instance=album)
+    else:
+        form = AlbumDeleteForm(request.POST, instance=album)
+        if form.is_valid():
+            form.save()
+            return redirect('index')
+
+    context = {
+        'form': form,
+        'album': album,
+    }
+    return render(request, 'albums/delete-album.html', context)
+
+# ----------------------------------------------------------------------
+
+
+# # --------------------------------------------------------------------------
 
 def games(request):
 
@@ -84,16 +207,6 @@ def shopping_list(request):
 
 def tasks(request):
     return render(request, 'tasks.html')
-
-
-# mikro-kontrolerite vkyshti naglasi
-def control_of_home(request):
-    return render(request, 'control_of_home.html')
-
-
-# avotmatizaciq bylgarene  / solarni paneli
-def control_of_garden(request):
-    return render(request, 'control_of_garden.html')
 
 
 def chat(request):
@@ -235,48 +348,4 @@ def delete_grocery(request, pk):
     to_delete = get_object_or_404(Groceries, pk=pk)
     to_delete.delete()
     return redirect('index')
-
-
-# # --------------------------------------------------------------------------
-# # profile / no profile different homepage
-#
-#
-# def get_profile():
-#     try:
-#         return Profile.objects.get()
-#     except Profile.DoesNotExist as ex:
-#         return None
-#
-#
-# def add_profile(request):
-#     if get_profile() is not None:
-#         return redirect('index')
-#
-#     if request.method == 'GET':
-#         form = ProfileForm()
-#     else:
-#         form = ProfileForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('index')
-#
-#     context = {
-#         'form': form,
-#     }
-#     return render(request, 'core/home-no-profile.html', context)
-#
-#
-# def index(request):
-#     profile = get_profile()
-#     if profile is None:
-#         return redirect('add profile')
-#
-#     context = {
-#         'albums': Album.objects.all(),
-#     }
-#
-#     return render(request, 'core/home-with-profile.html', context)
-#
-#
-# # --------------------------------------------------------------------------
 

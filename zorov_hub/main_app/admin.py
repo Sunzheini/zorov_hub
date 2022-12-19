@@ -1,6 +1,5 @@
 from django.contrib import admin
-from zorov_hub.main_app.models import Groceries, Tasks, Games
-
+from zorov_hub.main_app.models import Groceries, Tasks, Games, Profile
 
 """
 python manage.py createsuperuser
@@ -25,3 +24,8 @@ class TasksAdmin(admin.ModelAdmin):
 @admin.register(Games)
 class GamesAdmin(admin.ModelAdmin):
     list_display = ('id', 'game_name')
+
+
+@admin.register(Profile)
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = ('id', 'profile_name', 'profile_name')
