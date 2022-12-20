@@ -1,0 +1,24 @@
+{% extends 'core/base.html' %}
+
+{% block page_title %}Games{% endblock %}
+
+{% block page_content %}
+This is the `games` page
+
+    <br><br>
+    Games List:
+    <br><br>
+    {% if games_list %}
+        {% for game in games_list %}
+            <div>{{ game }}
+                <br>
+<a href="{% url 'game details' pk=game.pk slug=game.slug %}">{{ game.game_name }} details</a>
+                <br><br>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <br><br>
+    <a href="{% url 'add game' %}">add a game</a>
+
+{% endblock %}

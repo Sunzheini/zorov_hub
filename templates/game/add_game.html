@@ -1,11 +1,11 @@
 {% extends 'core/base.html' %}
 
-{% block page_title %}Games{% endblock %}
+{% block page_title %}Add game{% endblock %}
 
 {% block page_content %}
-This is the `games` page
+This is the `add game` page
 
-    <form action="{% url 'games' %}" method="post" enctype="multipart/form-data">
+    <form action="{% url 'add game' %}" method="post" enctype="multipart/form-data">
         {{ game_form.as_div }}
         {% csrf_token %}
         <button>write 2 da db</button>

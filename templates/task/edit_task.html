@@ -1,0 +1,20 @@
+{% extends 'core/base.html' %}
+
+{% block page_title %}edit task{% endblock %}
+
+{% block page_content %}
+This is the `edit task` page
+
+
+
+    <form action="{% url 'edit task' pk=task.pk %}" method="post">
+        {{ form.as_div }}
+        {% csrf_token %}
+        <button>submit</button>
+    </form>
+
+            <div class="actionBtn">
+    <a href="{% url 'delete task' pk=task.pk %}">delete {{ task.task_name }}</a>
+        </div>
+
+{% endblock %}

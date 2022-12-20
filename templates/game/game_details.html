@@ -7,6 +7,9 @@ This is the `game details` page
 
     <br><br>
         {{ current_game }}
+        {% if current_game.game_image %}
+            <br> <img width="200" src="/media/{{ current_game.game_image }}"/>
+        {% endif %}
     <br><br>
 
 {% endblock %}

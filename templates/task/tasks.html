@@ -1,0 +1,27 @@
+{% extends 'core/base.html' %}
+
+{% block page_title %}Tasks{% endblock %}
+
+{% block page_content %}
+This is the `tasks` page
+
+    <br><br>
+    Task List:
+    <br><br>
+    {% if tasks_list %}
+        {% for task in tasks_list %}
+            <div>{{ task }}
+                <br>
+<a href="{% url 'edit task' pk=task.pk %}">edit task {{ task.task_name }}</a>
+                                <br>
+<a href="{% url 'delete task' pk=task.pk %}">delete task {{ task.task_name }}</a>
+                <br><br>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <br><br>
+    <a href="{% url 'add task' %}">add a task</a>
+
+
+{% endblock %}

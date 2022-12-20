@@ -6,54 +6,24 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.text import slugify
 
-from zorov_hub.main_app.forms import NameForm, GameForm, ProfileForm, ProfileEditForm, ProfileDeleteForm
+from zorov_hub.main_app.forms import NameForm, GameForm, ProfileForm, ProfileEditForm, ProfileDeleteForm, \
+    TaskForm, TaskEditForm, TaskDeleteForm
 from zorov_hub.main_app.models import Groceries, Tasks, Games, Profile
 
 
-# --------------------------------------------------------------------------
-# test with a class
+# get data from db
+# ----------------------------------------------------------------------
+"""
+Groceries.objects.all()             # get all objects (__str__) // Select
+Groceries.objects.create()          # create a new object // Insert
 
-class ListDisplay:
-    @staticmethod
-    def display_list():
-        return ['item1', 'item22', 'item3']
+# s filter bazata ni vryshta samo iskanite neshta i e po-leko za memory!!!
+Groceries.objects.filter(age=36)    # filter // Select + Where
+Groceries.objects.update()          # update // Update
+Groceries.objects.raw('SELECT * ')  # directly sql
 
-
-# class-based views
-# --------------------------------------------------------------------------
-
-class ControlView:
-    @classmethod
-    def get_view1(cls):
-        return ControlView().control_of_garden
-
-    # mikro-kontrolerite vkyshti naglasi
-    def control_of_garden(self, request):
-        return render(request, 'control_of_garden.html')
-
-
-# class ControlView2(views.View):
-#     def get(self, request):     # prenapisvame gotoviq metod get
-#         return self.control_of_home(request)
-#
-#     # avotmatizaciq bylgarene  / solarni paneli
-#     def control_of_home(self, request):
-#
-#         context = {
-#             'some_text': 'some text...'
-#         }
-#
-#         return render(request, 'control_of_home.html', context)
-
-
-class ControlView2(views.TemplateView):
-    template_name = 'control_of_home.html'
-    extra_context = {'some_text': 'some text...'}
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['games'] = Games.objects.all()
-        return context
+Groceries.objects.all().delete()    # iztriva vsichko
+"""
 
 
 # Index function based view
@@ -83,7 +53,7 @@ def add_profile(request):
     context = {
         'form': form,
     }
-    return render(request, 'add_profile.html', context)
+    return render(request, 'profile/add_profile.html', context)
 
 
 def index(request):
@@ -96,10 +66,6 @@ def index(request):
     }
 
     return render(request, 'index.html', context)
-#
-#
-# def details_profile(request, pk):
-#     pass
 
 
 # --------------------------------------------------------------------------
@@ -130,7 +96,7 @@ def edit_profile(request, pk, slug):
         'form': form,
         'profile': current_profile,   # za da vzemem pk v url vyv form v html-a
     }
-    return render(request, 'edit_profile.html', context)
+    return render(request, 'profile/edit_profile.html', context)
 
 # --------------------------------------------------------------------------
 # delete
@@ -153,18 +119,98 @@ def delete_profile(request, pk, slug):
         'form': form,
         'profile': current_profile,
     }
-    return render(request, 'delete_profile.html', context)
+    return render(request, 'profile/delete_profile.html', context)
+
 
 # --------------------------------------------------------------------------
+# tasks
+
+def tasks(request):
+    context = {
+        'tasks_list': Tasks.objects.all(),
+    }
+    return render(request, 'task/tasks.html', context)
 
 
+def add_task(request):
 
+    if request.method == 'GET':
+        form = TaskForm()
+    else:
+        form = TaskForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('tasks')
+
+    context = {
+        'form': form,
+    }
+
+    return render(request, 'task/add_task.html', context)
+
+
+def edit_task(request, pk):
+    current_task = Tasks.objects.get(pk=pk)
+
+    if request.method == 'GET':
+        form = TaskEditForm(instance=current_task)
+    else:
+        form = TaskEditForm(request.POST, instance=current_task)
+        if form.is_valid():
+            form.save()
+            return redirect('tasks')
+
+    context = {
+        'form': form,
+        'task': current_task,   # za da vzemem pk v url vyv form v html-a
+    }
+    return render(request, 'task/edit_task.html', context)
+
+
+def delete_task(request, pk):
+
+    current_task = Tasks.objects.get(pk=pk)
+
+    if request.method == 'GET':
+        form = TaskDeleteForm(instance=current_task)
+    else:
+        form = TaskDeleteForm(request.POST, instance=current_task)
+        if form.is_valid():
+            form.save()
+            return redirect('tasks')
+
+    context = {
+        'form': form,
+        'task': current_task,
+    }
+    return render(request, 'task/delete_task.html', context)
 
 
 # --------------------------------------------------------------------------
 
 def games(request):
 
+    # (re)creation of slugs
+    all_games = Games.objects.all()
+    for g in all_games:
+        g.slug = slugify(g.game_name)
+    Games.objects.bulk_update(all_games, ['slug'])
+    # ---
+
+    context = {
+        'games_list': Games.objects.all(),
+    }
+    return render(request, 'game/games.html', context)
+
+
+def game_details(request, pk, slug):
+    context = {
+        'current_game': get_object_or_404(Games, pk=pk, slug=slug)
+    }
+    return render(request, 'game/game_details.html', context)
+
+
+def add_game(request):
     if request.method == 'GET':
         form = GameForm()  # ako e get syzdava formata prazna
     else:  # request.method == 'post'
@@ -181,16 +227,20 @@ def games(request):
         Games.objects.create(
             **form.cleaned_data
         )
-        make_them_slugs()
+        return redirect('games')
 
     # ---------------------------------------------------------------------
     context = {
         'game_form': form,
     }
 
-    return render(request, 'games.html', context)
+    return render(request, 'game/add_game.html', context)
 
 
+# groceries
+# ---------------------------------------------------------------------
+
+# only to showcase of different form elements
 def shopping_list(request):
 
     # form
@@ -221,147 +271,37 @@ def shopping_list(request):
     return render(request, 'shopping_list.html', context)
 
 
-def tasks(request):
-    return render(request, 'tasks.html')
+# other
+# ----------------------------------------------------------------------
 
 
 def chat(request):
     return render(request, 'chat.html')
 
 
-# ----------------------------------------------------------------------
-def process_description(request, process_id):
+# class-based views
+# --------------------------------------------------------------------------
 
-    get_the_groceries_info = get_all_groceries()    # get info from the db-getter
-    get_the_tasks_info = get_all_tasks()
-    get_1_task = get_a_specific_task()
+class ControlView:
+    @classmethod
+    def get_view1(cls):
+        return ControlView().control_of_garden
 
-    make_them_slugs()
-
-    context = {
-        'process_id': process_id,
-        'my_info': [4, 5, 6],
-        'value': random.random(),
-        'a_dict': {'first_item': 11, 'second_item': '22'},
-        'from_class': ListDisplay.display_list(),  # hubavo e da se izpylbnqvat tuk
-        'datetime': datetime.now(),
-
-        'groceries_list': get_the_groceries_info,
-        'tasks_list': get_the_tasks_info,
-        'task_1': get_1_task,
-
-        'games': Games.objects.all(),
-    }
-    return render(request, 'process_description.html', context)
+    # mikro-kontrolerite vkyshti naglasi
+    def control_of_garden(self, request):
+        return render(request, 'control_of_garden.html')
 
 
-def game_details(request, pk, slug):
-    context = {
-        'current_game': get_object_or_404(Games, pk=pk, slug=slug)
-    }
-    return render(request, 'game_details.html', context)
+# avotmatizaciq bylgarene  / solarni paneli
+class ControlView2(views.TemplateView):
+    template_name = 'control_of_home.html'
+    extra_context = {'some_text': 'some text...'}
 
-
-# ----------------------------------------------------------------------
-# not used
-def return_to_home(request):
-    return redirect('index')
-
-
-# get data from db
-# ----------------------------------------------------------------------
-"""
-Groceries.objects.all()             # get all objects (__str__) // Select
-Groceries.objects.create()          # create a new object // Insert
-
-# s filter bazata ni vryshta samo iskanite neshta i e po-leko za memory!!!
-Groceries.objects.filter(age=36)    # filter // Select + Where
-Groceries.objects.update()          # update // Update
-Groceries.objects.raw('SELECT * ')  # directly sql
-
-Groceries.objects.all().delete()    # iztriva vsichko
-"""
-
-
-def get_all_groceries():
-    # Bez list e `Query Set`, ne se izpylnqva na momenta
-    all_groceries = Groceries.objects.all() \
-        .order_by('id', 'grocery_name')     # moje da se chain-va (i pak e 1 zaqvka)
-    return all_groceries
-
-
-def get_all_tasks():
-    all_tasks = list(Tasks.objects.all())
-    return all_tasks
-
-
-def get_a_specific_task():
-    # get returns an object, not a query set
-    specific_task = Tasks.objects.get(pk=1)
-
-    # tova syshto ravoteshe na exam prep
-    # album = Album.objects.filter(pk=pk) \
-    #     .get()
-
-    return specific_task
-
-
-# ----------------------------------------------------------------------
-# kogato iskame da ni izleze konkretna forma s popylneni veche danni
-# da gi edit-nem, izpolzvame instance
-
-# def edit_album(request, pk):
-#
-#     album = Album.objects.get(pk=pk)
-#
-#     if request.method == 'GET':
-#         form = AlbumEditForm(instance=album)
-#     else:
-#         form = AlbumEditForm(request.POST, instance=album)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('index')
-#
-#     context = {
-#         'form': form,
-#         'album': album,   # za da vzemem pk v url vyv form v html-a
-#     }
-#     return render(request, 'albums/edit-album.html', context)
-
-# ----------------------------------------------------------------------
-# za delete
-
-# def delete_album(request, pk):
-#
-#     album = Album.objects.get(pk=pk)
-#
-#     if request.method == 'GET':
-#         form = AlbumDeleteForm(instance=album)
-#     else:
-#         form = AlbumDeleteForm(request.POST, instance=album)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('index')
-#
-#     context = {
-#         'form': form,
-#         'album': album,
-#     }
-#     return render(request, 'albums/delete-album.html', context)
-
-# ----------------------------------------------------------------------
-def make_them_slugs():
-    all_games = Games.objects.all()
-    for g in all_games:
-        g.slug = slugify(g.game_name)
-    Games.objects.bulk_update(all_games, ['slug'])
-
-# ----------------------------------------------------------------------
-
-
-# not used
-def delete_grocery(request, pk):
-    to_delete = get_object_or_404(Groceries, pk=pk)
-    to_delete.delete()
-    return redirect('index')
-
+    def get_context_data(self, **kwargs):
+        # get super's context
+        context = super().get_context_data(**kwargs)
+        # add our stuff
+        # just to showcase I am using games
+        # ['games'] will be passed to the html like in above views
+        context['games'] = Games.objects.all()
+        return context

@@ -1,0 +1,19 @@
+{% extends 'core/base.html' %}
+
+{% block page_title %}delete task{% endblock %}
+
+{% block page_content %}
+This is the `delete task` page
+
+
+
+    <form action="{% url 'delete task' pk=task.pk %}" method="post">
+        {{ form.as_div }}
+        {% csrf_token %}
+        <button>are you sure</button>
+    </form>
+
+
+
+
+{% endblock %}
