@@ -6,11 +6,11 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.text import slugify
 
-from zorov_hub.main_app.forms import NameForm, GameForm, ProfileForm
+from zorov_hub.main_app.forms import NameForm, GameForm, ProfileForm, ProfileEditForm, ProfileDeleteForm
 from zorov_hub.main_app.models import Groceries, Tasks, Games, Profile
 
 
-# ----------------------------------------------------------------------
+# --------------------------------------------------------------------------
 # test with a class
 
 class ListDisplay:
@@ -20,7 +20,7 @@ class ListDisplay:
 
 
 # class-based views
-# ----------------------------------------------------------------------
+# --------------------------------------------------------------------------
 
 class ControlView:
     @classmethod
@@ -57,20 +57,20 @@ class ControlView2(views.TemplateView):
 
 
 # Index function based view
-# ----------------------------------------------------------------------
-# ----------------------------------------------------------------------
+# --------------------------------------------------------------------------
+# --------------------------------------------------------------------------
 # profile / no profile different homepage
 
 def get_profile():
     try:
-        return Profile.objects.get(pk=1)        # ToDo: Authentication
+        return Profile.objects.get(pk=5)        # ToDo: Authentication (now looks for a profile with pk=5)
     except Profile.DoesNotExist as ex:
         return None
 
 
 def add_profile(request):
-    if get_profile() is not None:
-        return redirect('index')
+    # if get_profile() is not None:
+    #     return redirect('index')      # was used in the exam prep to avoid bypassing
 
     if request.method == 'GET':
         form = ProfileForm()
@@ -91,61 +91,77 @@ def index(request):
     if profile is None:
         return redirect('add profile')
 
-    return render(request, 'index.html')
+    context = {
+        'profiles': Profile.objects.all(),
+    }
+
+    return render(request, 'index.html', context)
+#
+#
+# def details_profile(request, pk):
+#     pass
 
 
-# ----------------------------------------------------------------------
+# --------------------------------------------------------------------------
 # kogato iskame da ni izleze konkretna forma s popylneni veche danni
 # da gi edit-nem, izpolzvame instance
 
 
-# ToDo: add profile details page and then links to the below views
+def edit_profile(request, pk, slug):
+
+    # (re)creation of slugs
+    all_profiles = Profile.objects.all()
+    for p in all_profiles:
+        p.slug = slugify(p.profile_name)
+    Profile.objects.bulk_update(all_profiles, ['slug'])
+    # ---
+
+    current_profile = Profile.objects.get(pk=pk)
+
+    if request.method == 'GET':
+        form = ProfileEditForm(instance=current_profile)
+    else:
+        form = ProfileEditForm(request.POST, instance=current_profile)
+        if form.is_valid():
+            form.save()
+            return redirect('index')
+
+    context = {
+        'form': form,
+        'profile': current_profile,   # za da vzemem pk v url vyv form v html-a
+    }
+    return render(request, 'edit_profile.html', context)
+
+# --------------------------------------------------------------------------
+# delete
+
+
 # ToDo: hide form in delete like in the exam prep2
+def delete_profile(request, pk, slug):
 
-def edit_profile(request, pk):
-
-    album = Album.objects.get(pk=pk)
+    current_profile = Profile.objects.get(pk=pk)
 
     if request.method == 'GET':
-        form = AlbumEditForm(instance=album)
+        form = ProfileDeleteForm(instance=current_profile)
     else:
-        form = AlbumEditForm(request.POST, instance=album)
+        form = ProfileDeleteForm(request.POST, instance=current_profile)
         if form.is_valid():
             form.save()
             return redirect('index')
 
     context = {
         'form': form,
-        'album': album,   # za da vzemem pk v url vyv form v html-a
+        'profile': current_profile,
     }
-    return render(request, 'albums/edit-album.html', context)
+    return render(request, 'delete_profile.html', context)
 
-# ----------------------------------------------------------------------
-# za delete
-
-
-def delete_profile(request, pk):
-
-    album = Album.objects.get(pk=pk)
-
-    if request.method == 'GET':
-        form = AlbumDeleteForm(instance=album)
-    else:
-        form = AlbumDeleteForm(request.POST, instance=album)
-        if form.is_valid():
-            form.save()
-            return redirect('index')
-
-    context = {
-        'form': form,
-        'album': album,
-    }
-    return render(request, 'albums/delete-album.html', context)
-
-# ----------------------------------------------------------------------
+# --------------------------------------------------------------------------
 
 
-# # --------------------------------------------------------------------------
+
+
+
+# --------------------------------------------------------------------------
 
 def games(request):
 

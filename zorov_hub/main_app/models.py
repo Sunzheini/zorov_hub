@@ -140,3 +140,10 @@ class Profile(models.Model):
             ('gigachad', 'gigachad'),
         )
     )
+
+    slug = models.SlugField(
+        # unique=True,
+        null=True,
+        blank=True,
+        verbose_name='profile_slug',
+    )

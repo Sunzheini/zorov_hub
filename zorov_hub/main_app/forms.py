@@ -62,6 +62,7 @@ class NameForm(forms.Form):
     )
 
 
+# -------------------------------------------------------------------------------
 # model form - for db driven apps
 # pravqt validaciq prez modela
 class GameForm(forms.ModelForm):
@@ -82,6 +83,7 @@ class GameForm(forms.ModelForm):
         }
 
 
+# -------------------------------------------------------------------------------
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile

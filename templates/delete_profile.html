@@ -1,0 +1,19 @@
+{% extends 'core/base.html' %}
+
+{% block page_title %}delete profile{% endblock %}
+
+{% block page_content %}
+This is the `delete profile` page
+
+
+
+    <form action="{% url 'delete profile' pk=profile.pk slug=profile.slug %}" method="post">
+        {{ form.as_div }}
+        {% csrf_token %}
+        <button>are you sure</button>
+    </form>
+
+
+
+
+{% endblock %}

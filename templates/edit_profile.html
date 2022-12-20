@@ -1,0 +1,20 @@
+{% extends 'core/base.html' %}
+
+{% block page_title %}edit profile{% endblock %}
+
+{% block page_content %}
+This is the `edit profile` page
+
+
+
+    <form action="{% url 'edit profile' pk=profile.pk slug=profile.slug %}" method="post">
+        {{ form.as_div }}
+        {% csrf_token %}
+        <button>submit</button>
+    </form>
+
+            <div class="actionBtn">
+                <a href="{% url 'delete profile' pk=profile.pk slug=profile.slug %}">delete {{ profile.profile_name }}</a>
+        </div>
+
+{% endblock %}

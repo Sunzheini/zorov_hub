@@ -15,9 +15,9 @@ urlpatterns = [
         # http://127.0.0.1:8000/profile/add
         path('add/', add_profile, name='add profile'),
         # http://127.0.0.1:8000/profile/edit
-        path('edit/', edit_profile, name='edit profile'),
+        path('edit/<int:pk>/<slug:slug>/', edit_profile, name='edit profile'),
         # http://127.0.0.1:8000/profile/delete
-        path('delete/', delete_profile, name='delete profile'),
+        path('delete/<int:pk>/<slug:slug>/', delete_profile, name='delete profile'),
     ])),
 
     # http://127.0.0.1:8000/games/

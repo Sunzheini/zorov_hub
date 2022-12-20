@@ -4,4 +4,15 @@
 
 {% block page_content %}
 This is the `index` page
+    <br><br>
+
+    {% for profile in profiles %}
+
+        <div class="actionBtn">
+                <a href="{% url 'edit profile' pk=profile.pk slug=profile.slug %}">Edit {{ profile.profile_name }}</a>
+        </div>
+
+    {% endfor %}
+<br><br>
+
 {% endblock %}
