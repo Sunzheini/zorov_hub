@@ -129,6 +129,12 @@ class TaskForm(forms.ModelForm):
                 attrs={
                     'placeholder': 'task name',
                 }
+            ),
+            'task_deadline': forms.DateTimeInput(
+                attrs={
+                    'placeholder': 'dd-mmm-yyyy',
+                    'type': 'date',         # taka veshe izkarva kalendara
+                }
             )
         }
 
@@ -137,11 +143,6 @@ class TaskEditForm(forms.ModelForm):
     class Meta:
         model = Tasks
         fields = '__all__'
-
-        widgets = {
-            'task_deadline': forms.DateTimeInput(
-            )
-        }
 
 
 class TaskDeleteForm(forms.ModelForm):

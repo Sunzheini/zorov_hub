@@ -1,6 +1,7 @@
 import random
 from datetime import datetime
 
+from django.contrib.auth.decorators import login_required
 from django.views import generic as views
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -33,7 +34,7 @@ Groceries.objects.all().delete()    # iztriva vsichko
 
 def get_profile():
     try:
-        return Profile.objects.get(pk=5)        # ToDo: Authentication (now looks for a profile with pk=5)
+        return Profile.objects.filter(pk=5).get()  # ToDo: Authentication (now looks for a profile with pk=5)
     except Profile.DoesNotExist as ex:
         return None
 
@@ -56,6 +57,8 @@ def add_profile(request):
     return render(request, 'profile/add_profile.html', context)
 
 
+# @login_required(login_url='add profile')
+@login_required     # login url se podava v settings.py
 def index(request):
     profile = get_profile()
     if profile is None:
@@ -82,7 +85,8 @@ def edit_profile(request, pk, slug):
     Profile.objects.bulk_update(all_profiles, ['slug'])
     # ---
 
-    current_profile = Profile.objects.get(pk=pk)
+    # current_profile = Profile.objects.get(pk=pk)
+    current_profile = Profile.objects.filter(pk=pk).get()
 
     if request.method == 'GET':
         form = ProfileEditForm(instance=current_profile)
@@ -105,7 +109,8 @@ def edit_profile(request, pk, slug):
 # ToDo: hide form in delete like in the exam prep2
 def delete_profile(request, pk, slug):
 
-    current_profile = Profile.objects.get(pk=pk)
+    # current_profile = Profile.objects.get(pk=pk)
+    current_profile = Profile.objects.filter(pk=pk).get()
 
     if request.method == 'GET':
         form = ProfileDeleteForm(instance=current_profile)
@@ -150,7 +155,8 @@ def add_task(request):
 
 
 def edit_task(request, pk):
-    current_task = Tasks.objects.get(pk=pk)
+    # current_task = Tasks.objects.get(pk=pk)
+    current_task = Tasks.objects.filter(pk=pk).get()
 
     if request.method == 'GET':
         form = TaskEditForm(instance=current_task)
@@ -169,7 +175,8 @@ def edit_task(request, pk):
 
 def delete_task(request, pk):
 
-    current_task = Tasks.objects.get(pk=pk)
+    # current_task = Tasks.objects.get(pk=pk)
+    current_task = Tasks.objects.filter(pk=pk).get()
 
     if request.method == 'GET':
         form = TaskDeleteForm(instance=current_task)
@@ -188,6 +195,7 @@ def delete_task(request, pk):
 
 # --------------------------------------------------------------------------
 
+# add spaceships
 def games(request):
 
     # (re)creation of slugs
@@ -217,17 +225,12 @@ def add_game(request):
         form = GameForm(request.POST, request.FILES)
         form.is_valid()  # proverka sprqmo zadadenoto v formata
 
-    # ne sym go probval vmesto ostanaloto za zapazvane
-    # -----------------
-    #     if form.is_valid():
-    #         form.save()
-
     # write to db - second option
     # ---------------------------------------------------------------------
         Games.objects.create(
             **form.cleaned_data
         )
-        return redirect('games')
+        return redirect('add game')  # ostava na syshtata stranica sled save
 
     # ---------------------------------------------------------------------
     context = {
@@ -274,7 +277,7 @@ def shopping_list(request):
 # other
 # ----------------------------------------------------------------------
 
-
+# app da izpolzvash telefona za kamera?
 def chat(request):
     return render(request, 'chat.html')
 
@@ -288,6 +291,7 @@ class ControlView:
         return ControlView().control_of_garden
 
     # mikro-kontrolerite vkyshti naglasi
+    # upravlenie s url i vmesto adafruit.io + kamera ot rasp pi4
     def control_of_garden(self, request):
         return render(request, 'control_of_garden.html')
 
