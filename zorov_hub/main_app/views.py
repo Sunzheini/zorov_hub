@@ -6,6 +6,7 @@ from django.views import generic as views
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.text import slugify
+from django.views.decorators.cache import cache_page
 
 from zorov_hub.main_app.forms import NameForm, GameForm, ProfileForm, ProfileEditForm, ProfileDeleteForm, \
     TaskForm, TaskEditForm, TaskDeleteForm
@@ -34,7 +35,7 @@ Groceries.objects.all().delete()    # iztriva vsichko
 
 def get_profile():
     try:
-        return Profile.objects.filter(pk=5).get()  # ToDo: Authentication (now looks for a profile with pk=5)
+        return Profile.objects.filter(pk=1).get()  # ToDo: Authentication (now looks for a profile with pk=5)
     except Profile.DoesNotExist as ex:
         return None
 
@@ -196,6 +197,9 @@ def delete_task(request, pk):
 # --------------------------------------------------------------------------
 
 # add spaceships
+
+# cache example
+@cache_page(1 * 60)     # 1 time x 60 sec stoi na :6379
 def games(request):
 
     # (re)creation of slugs
