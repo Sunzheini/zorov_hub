@@ -27,6 +27,8 @@ Groceries.objects.raw('SELECT * ')  # directly sql
 Groceries.objects.all().delete()    # iztriva vsichko
 """
 
+# deployment
+
 
 # Index function based view
 # --------------------------------------------------------------------------
