@@ -13,6 +13,17 @@ This is the `index` page
         </div>
 
     {% endfor %}
+
+    <br><br>
+Users:
+    {% for user in users %}
+        <div>
+            {{ user.username }}
+        </div>
+
+
+    {% endfor %}
+
 <br><br>
 
 {% endblock %}

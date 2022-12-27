@@ -2,6 +2,9 @@ import random
 from datetime import datetime
 
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+from django.contrib.auth.views import LoginView, LogoutView
 from django.views import generic as views
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -69,6 +72,7 @@ def index(request):
 
     context = {
         'profiles': Profile.objects.all(),
+        'users': User.objects.all(),
     }
 
     return render(request, 'index.html', context)
@@ -128,6 +132,33 @@ def delete_profile(request, pk, slug):
         'profile': current_profile,
     }
     return render(request, 'profile/delete_profile.html', context)
+
+
+# --------------------------------------------------------------------------
+# users
+
+def create_user(request):
+    if request.method == 'GET':
+        form = UserCreationForm()
+    else:
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('log in')
+
+    context = {
+        'form': form,
+    }
+
+    return render(request, 'user/create_user.html', context)
+
+
+class CustomLogInView(LoginView):
+    template_name = 'user/login.html'
+
+
+class CustomLogOutView(LogoutView):
+    template_name = 'user/log_out.html'
 
 
 # --------------------------------------------------------------------------

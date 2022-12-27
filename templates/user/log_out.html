@@ -1,0 +1,14 @@
+{% extends 'core/base.html' %}
+
+{% block page_title %}Log Out{% endblock %}
+
+{% block page_content %}
+This is the `Log Out` page
+
+    <form action="{% url 'log out' %}" method="post">
+        {{ form.as_div }}
+        {% csrf_token %}
+        <button>submit</button>
+    </form>
+
+{% endblock %}

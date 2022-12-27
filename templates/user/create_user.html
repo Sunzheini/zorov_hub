@@ -1,0 +1,14 @@
+{% extends 'core/base.html' %}
+
+{% block page_title %}Create User{% endblock %}
+
+{% block page_content %}
+This is the `create user` page
+
+    <form action="{% url 'create user' %}" method="post">
+        {{ form.as_div }}
+        {% csrf_token %}
+        <button>submit</button>
+    </form>
+
+{% endblock %}
