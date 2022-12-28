@@ -6,6 +6,9 @@ python manage.py createsuperuser
 daniel
 daniel_zorov@abv.bg
 Maimun06
+
+another
+Daniel1407
 """
 
 

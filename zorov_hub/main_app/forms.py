@@ -162,9 +162,32 @@ class TaskDeleteForm(forms.ModelForm):
         return self.instance
 
 
+# disable fields when deleting and also deleting a file
+
+# class DocumentDeleteForm(forms.ModelForm):
+#     class Meta:
+#         model = Document
+#         exclude = ['attachment']
+#
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+#         self.__disable_fields()
+#
+#     def __disable_fields(self):
+#         for name, field in self.fields.items():
+#             # field.widget.attrs['disabled'] = 'disabled'
+#             field.widget.attrs['readonly'] = 'readonly'
+#
+#     def save(self, commit=True):
+#         doc_path = self.instance.attachment.path    # attachment is a field in the model
+#         self.instance.delete()
+#         os.remove(doc_path)
+#         return self.instance
+
+
 # -------------------------------------------------------------------------------
 
-# overwrite save to delete image(or file?)
+# overwrite save to delete image(or)
 #     def save(self, commit=True):
 #         image_path = self.instance.image.path
 #         self.instance.delete()
