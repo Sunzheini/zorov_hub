@@ -23,6 +23,9 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
 ]
 
+# for heroku add: 'erp-demo.herokuapp.com', # erp-demo is the name of the app
+
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -45,6 +48,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+# for heroku add on top     'whitenoise.middleware.WhiteNoiseMiddleware',
+
 
 ROOT_URLCONF = 'zorov_hub.urls'
 
@@ -89,6 +94,18 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
+# # heroku gives custom info for the db
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'd7pque6llenjil',
+#         'USER': 'gfglkealwnywlh',
+#         'PASSWORD': '61f32a79a35f8925e65e11fd6433249f668b21062ae2640c59a3f7c3dc2aafaa',
+#         'HOST': 'ec2-54-77-40-202.eu-west-1.compute.amazonaws.com',
+#         'PORT': '5432',
+#     }
+# }
 
 # DATABASES = {
 #     'default': {
@@ -148,6 +165,17 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     join(BASE_DIR, 'staticfiles'),
 )
+
+# for heroku use this (the folder must be static, not staticfiles)
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+#
+# STATIC_URL = '/static/'
+# STATICFILES_DIRS = (
+#     join(BASE_DIR, 'static'),
+# )
+
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media_files'
