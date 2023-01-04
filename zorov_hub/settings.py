@@ -3,6 +3,10 @@ from os.path import join
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -37,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'zorov_hub.main_app',
+    'cloudinary',
 ]
 
 MIDDLEWARE = [
@@ -179,6 +184,15 @@ STATICFILES_DIRS = (
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media_files'
+
+# heroku
+cloudinary.config(
+  cloud_name="hpnglbxlz",
+  api_key="713429118316855",
+  api_secret="veB_dwVAE954b9yeyx3rCUNnV2o",
+)
+# syshto corrention in models and the links for the file in templates
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

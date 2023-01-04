@@ -9,6 +9,14 @@ This is the `game details` page
         {{ current_game }}
         {% if current_game.game_image %}
             <br> <img width="200" src="/media/{{ current_game.game_image }}"/>
+
+            {#            cloudinary#}
+{#            <img src="{{ document.attachment.url }}" alt="image">#}
+
+{#                        <td><a href="{{ document.attachment.url }}">#}
+{#                        "{{ document.attachment.url }}"</a></td>#}
+
+
         {% endif %}
     <br><br>
 

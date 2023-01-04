@@ -193,3 +193,10 @@ class TaskDeleteForm(forms.ModelForm):
 #         self.instance.delete()
 #         os.remove(image_path)
 #         return self.instance
+
+    # # heroku
+    # def save(self, commit=True):
+    #     #doc_path = self.instance.attachment.path    # attachment is a field in the model
+    #     self.instance.delete()
+    #     #os.remove(doc_path)
+    #     return self.instance

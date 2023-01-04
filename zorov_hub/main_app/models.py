@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from cloudinary import models as cloudinary_models
 
 
 # 1 class == 1 table
@@ -106,6 +107,10 @@ class Games(models.Model):
         blank=True,
         verbose_name='SLUG',
     )
+
+    # cloudinary
+    #     attachment = cloudinary_models.CloudinaryField('image', resource_type="auto",
+    #                                                    blank=False, null=False)
 
     game_image = models.ImageField(
         blank=True, null=True,

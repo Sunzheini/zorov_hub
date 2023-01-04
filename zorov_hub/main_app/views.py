@@ -260,6 +260,7 @@ def add_game(request):
         form = GameForm()  # ako e get syzdava formata prazna
     else:  # request.method == 'post'
         form = GameForm(request.POST, request.FILES)
+        # kato promenash fail pri edit pak trqbva da ima request.FILES i enctype="multipart/form-data"
         form.is_valid()  # proverka sprqmo zadadenoto v formata
 
     # write to db - second option
