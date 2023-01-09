@@ -110,7 +110,10 @@ class Games(models.Model):
 
     # cloudinary
     #     attachment = cloudinary_models.CloudinaryField('image', resource_type="auto",
-    #                                                    blank=False, null=False)
+    #                                                    blank=False, null=False,
+    #                                                           use_filename=True,
+    #                                                           unique_filename=False,
+    #                                                    )
 
     game_image = models.ImageField(
         blank=True, null=True,

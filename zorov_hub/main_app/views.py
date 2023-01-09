@@ -293,6 +293,7 @@ def shopping_list(request):
     else:   # request.method == 'post'
         form = NameForm(request.POST)
         form.is_valid()         # proverka sprqmo zadadenoto v formata
+        # you can use info from a form to modify context, i.e. dropdown filter
         a_grocery_name = form.cleaned_data['form_grocery_name']
         a_grocery_count = form.cleaned_data['form_grocery_count']
 
